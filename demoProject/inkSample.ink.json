@@ -157,10 +157,16 @@
 			"start": [
 				[
 					{
-						"#": "background: plmhpoT.jpeg"
+						"#": "background: ZJZz4dp.jpeg"
 					},
 					{
 						"#": "sprite: O1a76nl.gif"
+					},
+					{
+						"#": "sprite: 8CB8EUX.png at left"
+					},
+					{
+						"#": "sprite: AtpoiUa.png at right"
 					},
 					[
 						"^They are keeping me waiting.",

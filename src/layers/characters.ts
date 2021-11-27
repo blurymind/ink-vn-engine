@@ -4,15 +4,15 @@ import { Point } from "../point";
 import { Layer } from "./layers";
 
 class Character extends Layer {
-    private centerPosX : number;
+    private anchor : string | undefined;
     private position : Point;
     private sprite : ImageBitmap;
     private spriteURL : string;
 
-    constructor(spriteURL : string, posX : number) {
+    constructor(spriteURL : string, anchor : string | undefined) {
         super();
 
-        this.centerPosX = posX;
+        this.anchor = anchor;
         this.Sprite = spriteURL;
     }
 
@@ -26,8 +26,12 @@ class Character extends Layer {
     Draw(canvas : Canvas) : void {
         if (this.sprite != null) {
             if (this.position == null) {
+                let x = (canvas.Size.X / 2 ) - (this.sprite.width / 2);
+                if (this.anchor) {
+                    x = this.anchor === "left" ? 0 : canvas.Size.X - this.sprite.width;
+                }
                 this.position = new Point(
-                    this.centerPosX - (this.sprite.width / 2),
+                    x,
                     canvas.Size.Y - this.sprite.height
                 );
             }
@@ -49,8 +53,8 @@ export class Characters extends Layer {
         if (this.characters.length > 0) {
             this.characters = [];
         }
-
-        this.characters.push(new Character(spriteURL, canvas.Size.X / 2));
+        const characterData =  spriteURL.split(" at ");
+        this.characters.push(new Character(spriteURL, characterData.length > 1 ? characterData[1] : undefined));
     }
 
     Draw(canvas : Canvas) : void {

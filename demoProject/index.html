@@ -11,16 +11,16 @@
 <script src="ink-vn-engine.js"></script>
 <script type="text/javascript">
     window.onload = function() {
-        // fetch("inkSample.json")
-        //     .then(response => response.json())
-        //     .then(json => {
-        //         console.log(json, InkVN)
-        //         const vn = new InkVN.VN("./inkSample.json", "vn");
-        //         console.log(vn)
-        //     });
+        fetch("inkSample.ink.json")
+            .then(response => response.json())
+            .then(json => {
+                console.log(json, InkVN)
+                const vn = new InkVN.VN(json, "vn");
+                console.log(vn)
+            });
 
-        const vn = new InkVN.VN("inkSample.ink.json", "vn");
-        console.log(vn)
+        // const vn = new InkVN.VN("inkSample.ink.json", "vn");
+        // console.log(vn)
     };
 </script>
 </body>

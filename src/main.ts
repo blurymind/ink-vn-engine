@@ -21,12 +21,11 @@ export class VN {
     private speechScreen : Layers.SpeechLayer;
     private transition : Layers.Transition;
 
-    constructor(storyFilename : string, containerID : string) {
+    constructor(storyFilenameOrObject : string | object, containerID : string) {
         this.Audio = AudioFactory.Create();
-
         this.Canvas = new Canvas(containerID, Config.ScreenSize);
 
-        fetch(storyFilename).then(response => response.text()).then(rawStory => {
+        const initStory = (rawStory : string) => {
             this.Story = new InkJs.Story(rawStory);
             Config.Load(this.Story.globalTags || []);
             this.Canvas.Size = Config.ScreenSize;
@@ -51,7 +50,12 @@ export class VN {
             this.continue();
             this.previousTimestamp = 0;
             this.requestStep();
-        });
+        };
+        if (typeof storyFilenameOrObject === "string") {
+            fetch(storyFilenameOrObject).then(response => response.text()).then(initStory);
+        } else {
+            initStory(JSON.stringify(storyFilenameOrObject));
+        }
     }
 
     private computeTags() : void {

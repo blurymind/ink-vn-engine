@@ -35,7 +35,8 @@ function bundle() {
         .bundle()
         .on("error", error)
         .pipe(source("ink-vn-engine.js"))
-        .pipe(gulp.dest("lib"));
+        // .pipe(gulp.dest("lib"));
+        .pipe(gulp.dest("demoProject"));
 }
 
 gulp.task("default", ["build"], function() { });

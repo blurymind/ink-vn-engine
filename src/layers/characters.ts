@@ -4,66 +4,92 @@ import { Point } from "../point";
 import { Layer } from "./layers";
 
 class Character extends Layer {
-    private anchor : string | undefined;
-    private position : Point;
-    private sprite : ImageBitmap;
-    private spriteURL : string;
+    private anchor : string | undefined; // current anchor
+    private currentState : string;
+    private position : Point; // current position
+    private show : boolean; // currently visible
+    private sprites : {[currentState : string] : ImageBitmap}; // loaded state sprites
 
-    constructor(spriteURL : string, anchor : string | undefined) {
+    constructor() {
         super();
-
-        this.anchor = anchor;
-        this.Sprite = spriteURL;
+        this.currentState = "default";
+        this.sprites = {};
+        this.show = false;
     }
 
-    set Sprite(spriteURL : string) {
-        if (spriteURL !== this.spriteURL) {
-            this.spriteURL = spriteURL;
-            Loader.LoadImage(spriteURL).then(image => this.sprite = image);
-        }
+    Image(spriteURL : string, spriteKey : string) {
+        Loader.LoadImage(spriteURL).then(image => this.sprites[spriteKey] = image);
+    }
+
+    Show(spriteKey : string, anchor : string) {
+        this.show = true;
+        this.currentState = spriteKey;
+        this.anchor = anchor;
+    }
+
+    Hide() {
+        this.show = false;
     }
 
     Draw(canvas : Canvas) : void {
-        if (this.sprite != null) {
-            if (this.position == null) {
-                let x = (canvas.Size.X / 2 ) - (this.sprite.width / 2);
-                if (this.anchor) {
-                    x = this.anchor === "left" ? 0 : canvas.Size.X - this.sprite.width;
-                }
-                this.position = new Point(
-                    x,
-                    canvas.Size.Y - this.sprite.height
-                );
-            }
+        if (!this.show) {
+            return;
+        }
+        const sprite = this.sprites[this.currentState];
+        if (sprite != null) {
+        let x = (canvas.Size.X / 2 ) - (sprite.width / 2);
+        if (this.anchor) {
+            x = this.anchor === "left" ? 0 : canvas.Size.X - sprite.width;
+        }
+        this.position = new Point(
+            x,
+            canvas.Size.Y - sprite.height
+        );
 
-            canvas.DrawImage(this.sprite, this.position);
+        canvas.DrawImage(sprite, this.position);
         }
     }
 }
 
 export class Characters extends Layer {
-    private characters : Character[] = [];
+    private characters : { [a : string] : Character } = {};
 
     constructor() {
         super();
     }
 
-    Add(spriteURL : string, canvas : Canvas) {
-        // For now just handle one character at a time
-        if (this.characters.length > 0) {
-            this.characters = [];
+    Add(spriteWithParams : string) {
+        const characterData =  spriteWithParams.split(" ");
+        if (!(characterData[0] in this.characters)) {
+            this.characters[characterData[0]] = new Character();
         }
-        const characterData =  spriteURL.split(" at ");
-        this.characters.push(new Character(spriteURL, characterData.length > 1 ? characterData[1] : undefined));
+        this.characters[characterData[0]].Image(characterData[2], characterData[1]);
+    }
+
+    Show(spriteWithParams : string) {
+        const characterData =  spriteWithParams.split(" ");
+        // # show: anya happy [left]
+        this.characters[characterData[0]].Show(characterData[1], characterData[2])
+    }
+
+    Hide(spriteWithParams : string) {
+        const characterData =  spriteWithParams.split(" ");
+        this.characters[characterData[0]].Hide()
+    }
+
+    HideAll() {
+        for (const character in this.characters) {
+            this.characters[character].Hide()
+        }
     }
 
     Draw(canvas : Canvas) : void {
-        for (const character of this.characters) {
-            character.Draw(canvas);
+        for (const character in this.characters) {
+            this.characters[character].Draw(canvas);
         }
     }
 
     Remove() {
-        this.characters = [];
+        this.characters = {};
     }
 }

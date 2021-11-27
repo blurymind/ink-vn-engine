@@ -11,6 +11,15 @@
 			{
 				"#": "root_path: i.imgur.com"
 			},
+			{
+				"#": "image: anya default O1a76nl.gif"
+			},
+			{
+				"#": "image: anya happy 8CB8EUX.png"
+			},
+			{
+				"#": "image: tom default AtpoiUa.png"
+			},
 			"ev",
 			{
 				"VAR?": "DEBUG"
@@ -54,7 +63,7 @@
 							"flg": 20
 						},
 						{
-							"->": "0.8"
+							"->": "0.11"
 						},
 						{
 							"c-0": [
@@ -102,7 +111,7 @@
 							"->": "start"
 						},
 						{
-							"->": "0.8"
+							"->": "0.11"
 						},
 						null
 					]
@@ -160,13 +169,10 @@
 						"#": "background: ZJZz4dp.jpeg"
 					},
 					{
-						"#": "sprite: O1a76nl.gif"
+						"#": "show: anya happy left"
 					},
 					{
-						"#": "sprite: 8CB8EUX.png at left"
-					},
-					{
-						"#": "sprite: AtpoiUa.png at right"
+						"#": "show: tom default right"
 					},
 					[
 						"^They are keeping me waiting.",
@@ -225,8 +231,17 @@
 								],
 								"^. The door was locked after I sat down.",
 								"\n",
+								{
+									"#": "show: anya default right"
+								},
+								{
+									"#": "hide: tom"
+								},
 								"^I don't even have a pen to do any work. There's a copy of the morning's intercept in my pocket, but staring at the jumbled letters will only drive me mad.",
 								"\n",
+								{
+									"#": "hide:"
+								},
 								"^I am not a machine, whatever they say about me.",
 								"\n",
 								{

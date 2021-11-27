@@ -29,10 +29,34 @@ Or it can be used like this! # Paulloz
 # name:
 ```
 
-* Sprites can be displayed or removed (for now, only one sprite can be displayed at a time)
+* Sprites can be displayed or removed. First you must set them up like so (similar to renpy)
 ```
-# sprite: path/to/your/sprite.png
-# sprite: 
+// in the global scope
+# root_path_is_remote: true // add this if you want image resources to be hosted on another server
+# root_path: i.imgur.com // the baseurl of the remote server or the relative path
+
+// This will load the images
+# image: characterName characterEmotion imageName.png
+
+// examples:
+# image: anya default O1a76nl.gif 
+# image: anya happy 8CB8EUX.png
+# image: tom default AtpoiUa.png
+```
+
+* From there on you can show/hide them like so (again similar to renpy)
+```
+// characterName and emotion correspond to the ones you set with the image tag
+// the anchor can be left, right or undefined (middle)
+# show: characterName characterEmotion anchor
+# hide: characterName // if no characterName is given, all character avatars are hidden
+
+//examples:
+# show: anya happy left
+# show: tom default right
+# hide: tom
+// this hides all character avatars
+# hide:
 ```
 
 * Background music can be played or stopped
@@ -88,7 +112,7 @@ This is what is going to be implemented soon:
   * ~~simple picture~~ :heavy_check_mark:
   * repeating pattern
   * ~~9 patch~~ :heavy_check_mark:
-* Manage multiple sprites on screen
+* ~~Manage multiple sprites on screen~~ :heavy_check_mark:
 * Highlight the speaking character's sprite
 * Fading music
 * Animate sprite entries / exits

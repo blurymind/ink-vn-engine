@@ -84,11 +84,23 @@ export class VN {
                             this.background.BackgroundImage = value;
                             break;
                         }
-                        case "sprite": {
+                        case "image": {
                             if (value.length > 0) {
-                                this.characters.Add(value, this.Canvas);
+                                this.characters.Add(value);
+                            }
+                            break;
+                        }
+                        case "show": {
+                            if (value.length > 0) {
+                                this.characters.Show(value);
+                            }
+                            break;
+                        }
+                        case "hide": {
+                            if (value.length > 0) {
+                                this.characters.Hide(value);
                             } else {
-                                this.characters.Remove();
+                                this.characters.HideAll();
                             }
                             break;
                         }

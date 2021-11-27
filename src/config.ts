@@ -2,6 +2,8 @@ import { Point } from "./point";
 
 class ClassConfig {
     DefaultTextSpeed : number = 30;
+    RootPath : string = "";
+    RootPathIsRemote: boolean = false;
     ScreenSize : Point = new Point(800, 600);
 
     private textSpeed : number;
@@ -48,6 +50,16 @@ class ClassConfig {
                         } else {
                             throw new TypeError();
                         }
+                        break;
+                    }
+                    case "root_path":
+                    case "rootpath": {
+                        this.RootPath = value;
+                        break;
+                    }
+                    case "root_path_is_remote":
+                    case "rootpathisremote": {
+                        this.RootPathIsRemote = value === "true";
                         break;
                     }
                 }

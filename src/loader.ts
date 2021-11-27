@@ -1,3 +1,5 @@
+import { Config } from "./config";
+
 class ClassLoader {
     LoadImage(URL : string) : Promise<ImageBitmap> {
         return new Promise((resolve : Function, reject : Function) => {
@@ -12,7 +14,9 @@ class ClassLoader {
                 worker.terminate();
             });
 
-            worker.postMessage(`${window.location.href.replace(/[^\\\/]*$/, "")}${URL}`);
+            worker.postMessage(Config.RootPathIsRemote ?
+                `https://${Config.RootPath ? Config.RootPath + "/" : ""}${URL}`
+                : `${Config.RootPath ? Config.RootPath + "/" : ""}${window.location.href.replace(/[^\\\/]*$/, "")}${URL}`);
         });
     }
 

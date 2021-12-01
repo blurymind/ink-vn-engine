@@ -43,7 +43,6 @@ export class VN {
                 OuterMargin : new Point(50)
             });
             this.choiceScreen = new Layers.ChoiceLayer(this.Canvas.Size);
-
             this.Canvas.OnClick.On(this.mouseClick.bind(this));
             this.Canvas.OnMove.On(this.mouseMove.bind(this));
 
@@ -77,7 +76,8 @@ export class VN {
                     const value : string = getFinalValue(match[2]);
                     switch (key) {
                         case "preload": {
-                            value.split(",").forEach(_value => Preloader.Preload(_value.trim()));
+                            value.split(",").forEach(_value => Preloader.Preload(
+                                Config.RootPathIsRemote ? `https://${Config.RootPath ? Config.RootPath + "/" : ""}${_value.trim()}` : `${Config.RootPath ? Config.RootPath + "/" : ""}${_value.trim()}`));
                             break;
                         }
                         case "background": {
@@ -87,6 +87,14 @@ export class VN {
                         case "image": {
                             if (value.length > 0) {
                                 this.characters.Add(value);
+                            }
+                            break;
+                        }
+                        case "imagebutton": {
+                            if (value.length > 0) {
+                                //do_thing yay%s.png 30 20
+                                const buttonParam =  value.split(" ");
+                                this.choiceScreen.AddButton(this.characters, {knot: buttonParam[0], text: buttonParam[1], position: new Point(parseInt(buttonParam[2]), parseInt(buttonParam[3]))});
                             }
                             break;
                         }
@@ -145,6 +153,14 @@ export class VN {
 
             if (this.Story.currentText.replace(/\s/g, "").length <= 0) {
                 this.continue();
+                this.computeTags();
+                if (this.choiceScreen.choices.length > 0) {
+                    this.currentScreen = this.choiceScreen ;
+                } else {
+                    // still required for initiation when there is no text
+                    this.speechScreen.Say(this.Story.currentText, this.speakingCharacterName);
+                    this.currentScreen = this.speechScreen;
+                }
             } else {
                 this.computeTags();
                 this.speechScreen.Say(this.Story.currentText, this.speakingCharacterName);
@@ -205,8 +221,14 @@ export class VN {
         this.requestStep();
     }
 
-    private validateChoice(choiceIndex : number) : void {
-        this.Story.ChooseChoiceIndex(choiceIndex);
+    // when number,its a choiceIndex, when string - its a knot
+    private validateChoice(choice : number | string) : void {
+        if (typeof choice === "string") {
+            this.Story.ChoosePathString(choice);
+        } else {
+            this.Story.ChooseChoiceIndex(choice);
+        }
+        // this.characters.HideAll();
         this.continue();
     }
 }

@@ -4,11 +4,11 @@ import { Point } from "../point";
 import { Layer } from "./layers";
 
 class Character extends Layer {
-    private anchor : string | undefined; // current anchor
+    private sprites : {[currentState : string] : ImageBitmap}; // loaded state sprites
+    private anchor : string | Point; // current anchor
     private currentState : string;
     private position : Point; // current position
     private show : boolean; // currently visible
-    private sprites : {[currentState : string] : ImageBitmap}; // loaded state sprites
 
     constructor() {
         super();
@@ -21,10 +21,12 @@ class Character extends Layer {
         Loader.LoadImage(spriteURL).then(image => this.sprites[spriteKey] = image);
     }
 
-    Show(spriteKey : string, anchor : string) {
+    Show(spriteKey : string, anchor : string | Point) {
         this.show = true;
         this.currentState = spriteKey;
-        this.anchor = anchor;
+        if (anchor) {
+            this.anchor = anchor;
+        }
     }
 
     Hide() {
@@ -37,17 +39,34 @@ class Character extends Layer {
         }
         const sprite = this.sprites[this.currentState];
         if (sprite != null) {
-        let x = (canvas.Size.X / 2 ) - (sprite.width / 2);
-        if (this.anchor) {
-            x = this.anchor === "left" ? 0 : canvas.Size.X - sprite.width;
+        let x : number;
+        let y = canvas.Size.Y - sprite.height;
+        if (typeof this.anchor === "string") { // left/right/etc
+            x = (canvas.Size.X / 2 ) - (sprite.width / 2);// default to centre
+            if (this.anchor === "left" || this.anchor === "right") {
+                x = this.anchor === "left" ? 0 : canvas.Size.X - sprite.width;
+            }
+        } else {
+            x = this.anchor.X;
+            y = this.anchor.Y;
         }
         this.position = new Point(
             x,
-            canvas.Size.Y - sprite.height
+            y
         );
 
         canvas.DrawImage(sprite, this.position);
         }
+    }
+
+    GetImage(spriteState : string) : ImageBitmap | undefined {
+        console.log(this.sprites, spriteState,"---")
+        if (spriteState in this.sprites) {
+            const sprite = this.sprites[spriteState];
+            console.log("SPRITE ===> ", sprite)
+            return sprite;
+        }
+        return undefined;
     }
 }
 
@@ -66,20 +85,30 @@ export class Characters extends Layer {
         this.characters[characterData[0]].Image(characterData[2], characterData[1]);
     }
 
-    Show(spriteWithParams : string) {
+    Show(spriteWithParams : string, position? : Point | undefined) {
         const characterData =  spriteWithParams.split(" ");
         // # show: anya happy [left]
-        this.characters[characterData[0]].Show(characterData[1], characterData[2])
+        if (characterData[0] in  this.characters) {
+            this.characters[characterData[0]].Show(characterData[1], position || characterData[2]);
+        }
+    }
+
+    GetImage(spriteName : string, spriteState : string) : ImageBitmap | undefined {
+        if (spriteName in  this.characters) {
+            console.log("ITS IN", spriteName)
+            return this.characters[spriteName].GetImage(spriteState);
+        }
+        return undefined;
     }
 
     Hide(spriteWithParams : string) {
         const characterData =  spriteWithParams.split(" ");
-        this.characters[characterData[0]].Hide()
+        this.characters[characterData[0]].Hide();
     }
 
     HideAll() {
         for (const character in this.characters) {
-            this.characters[character].Hide()
+            this.characters[character].Hide();
         }
     }
 

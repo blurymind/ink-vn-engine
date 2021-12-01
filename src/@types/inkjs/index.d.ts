@@ -2,8 +2,10 @@ declare module 'inkjs' {
     export class Choice {
         constructor()
 
-        index : number;
+        index?: number;
         text : string
+        knot? : any;
+        position?: any;
     }
 
     export class Story {
@@ -17,7 +19,8 @@ declare module 'inkjs' {
         globalTags : string[]
         variablesState : VariablesState
 
-        ChooseChoiceIndex(choiceIdx : number) : void
+        ChooseChoiceIndex(choiceIdx : number) : void;
+        ChoosePathString(path : string) : void;
         Continue() : void
         ContinueMaximally() : void
     }

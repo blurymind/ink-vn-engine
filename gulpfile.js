@@ -48,6 +48,6 @@ gulp.task("watch", [] , function() {
     bundler.on("log", log.info);
 });
 gulp.task("clean", [], function() {
-    del(["lib/ink-vn-engine.js"]);
+    del(["demoProject/ink-vn-engine.js"]);
 });
 

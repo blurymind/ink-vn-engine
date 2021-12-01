@@ -34,7 +34,7 @@ class SpeechBox {
     private nextWord : string;
     private position : Point;
     private size : Point;
-    private textLines : [string] = [""];
+    private textLines : [string?] = [""];
 
     constructor(position : Point, size : Point, configuration : ISpeechBoxConfiguration) {
         this.position = position.Clone();
@@ -42,10 +42,12 @@ class SpeechBox {
         this.innerMargin = configuration.InnerMargin;
         this.innerSize = this.size.Sub(this.innerMargin.Mult(new Point(2)));
 
-        this.boxBackground = BoxBackgroundFactory.Create(
-            configuration.BackgroundType, configuration.Background,
-            this.size.Clone()
-        );
+        if (this.textLines.length > 0) {
+            this.boxBackground = BoxBackgroundFactory.Create(
+                configuration.BackgroundType, configuration.Background,
+                this.size.Clone()
+            );
+        }
 
         this.fontSize = configuration.FontSize;
         this.fontColor = configuration.FontColor;
@@ -75,7 +77,7 @@ class SpeechBox {
     Draw(canvas : Canvas) : void {
         canvas.Translate(this.position);
 
-        this.boxBackground.Draw(canvas);
+        this.boxBackground?.Draw(canvas);
 
         canvas.Translate(this.position.Add(this.innerMargin));
 

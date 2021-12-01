@@ -2,7 +2,7 @@ import { Choice } from "inkjs";
 import { Canvas } from "../canvas";
 import { IRect, Point } from "../point";
 import { BoxBackground, BoxBackgroundFactory, BoxBackgroundTypes } from "./boxbackgrounds";
-import { GameplayLayer } from "./layers";
+import {Characters, GameplayLayer} from "./layers";
 
 class ChoiceBox {
     private boxBackground : BoxBackground;
@@ -13,14 +13,23 @@ class ChoiceBox {
     private position : Point;
     private size : Point;
     private text : string;
+    private image? : ImageBitmap;
+    private hoverImage? : ImageBitmap;
+    public isHovered: boolean;
 
-    constructor(id : number, text : string, width : number, position : Point) {
+    constructor(id : number, text : string, width : number, position : Point, image? : ImageBitmap, hoverImage? : ImageBitmap) {
         this.id = id;
         this.text = text;
 
         this.size = new Point(width, (this.fontSize * 1.42857) + (2 * this.innerMargin.Y));
-        this.position = position;
+        if (image) {
+            this.image = image;
+            this.size = new Point(image.width, image.height);
+        }
+        this.hoverImage = hoverImage;
 
+        this.position = position;
+        this.isHovered = false;
         this.boxBackground = BoxBackgroundFactory.Create(BoxBackgroundTypes.COLOR, "rgba(0, 0, 0, .7)", this.size, this.position);
     }
 
@@ -40,8 +49,12 @@ class ChoiceBox {
             this.beforeFirstDraw(canvas);
         }
 
-        this.boxBackground.Draw(canvas);
-        canvas.DrawText(this.text, this.position.Add(this.innerMargin), "white", this.fontSize, this.size.X);
+        if (!this.image) {
+            this.boxBackground.Draw(canvas);
+            canvas.DrawText(this.text, this.position.Add(this.innerMargin), "white", this.fontSize, this.size.X);
+        } else {
+            canvas.DrawImage(this.hoverImage && this.isHovered ? this.hoverImage : this.image, this.position);
+        }
     }
 
     private beforeFirstDraw(canvas : Canvas) : void {
@@ -51,16 +64,17 @@ class ChoiceBox {
 }
 
 export class ChoiceLayer extends GameplayLayer {
+    choices : Choice[] = [];
     private boundingRect : Point;
     private choiceBoxes : ChoiceBox[] = [];
-    private choices : Choice[] = [];
     private isMouseOnChoice : ChoiceBox = null;
     private screenSize : Point;
     private translation : Point;
 
     constructor(screenSize : Point) {
         super();
-
+        this.choiceBoxes = [];
+        this.translation = new Point(0, 0 );
         this.screenSize = screenSize;
     }
 
@@ -77,6 +91,21 @@ export class ChoiceLayer extends GameplayLayer {
         }
         this.boundingRect = new Point(width, position.Y - 40);
         this.translation = this.screenSize.Div(new Point(2)).Sub(this.boundingRect.Div(new Point(2)));
+    }
+
+    AddButton(characters : Characters, button : Choice) {
+        // add image to each box
+        const rectImage = characters.GetImage(button.text, "default");
+        const rectImageHover = characters.GetImage(button.text, "hover");
+        this.choices.push(button);
+        // Todo add support for percent if % in values?
+        const newButton = new ChoiceBox(button.knot, button.text, 200, button.position, rectImage, rectImageHover);
+        this.choiceBoxes.push(newButton);
+    }
+
+    ClearButtons(){
+        this.choices = [];
+        this.choiceBoxes = [];
     }
 
     Draw(canvas : Canvas) : void {
@@ -107,10 +136,12 @@ export class ChoiceLayer extends GameplayLayer {
             };
         } else {
             for (const choice of this.choiceBoxes) {
+                choice.isHovered = false;
                 if (mousePosition.IsInRect(choice.BoundingRect)) {
                     return (canvas : Canvas) => {
                         this.isMouseOnChoice = choice;
                         canvas.SetCursor("pointer");
+                        choice.isHovered = true;
                     };
                 }
             }

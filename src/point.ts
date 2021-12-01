@@ -43,6 +43,10 @@ export class Point {
         return new Point(this.X / point.X, this.Y / point.Y);
     }
 
+    Percent(point : Point) : Point {
+        return new Point((point.X / 100) * this.X , (point.Y / 100) * this.Y);
+    }
+
     IsInRect(rect : IRect) {
         return this.X >= rect.Position.X && this.X <= rect.Position.Add(rect.Size).X
             && this.Y >= rect.Position.Y && this.Y <= rect.Position.Add(rect.Size).Y;

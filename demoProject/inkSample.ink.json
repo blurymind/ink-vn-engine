@@ -20,6 +20,15 @@
 			{
 				"#": "image: tom default AtpoiUa.png"
 			},
+			{
+				"#": "preload: 3aaz0G9.png, erXlJb6.png"
+			},
+			{
+				"#": "image: houseButton default 3aaz0G9.png"
+			},
+			{
+				"#": "image: houseButton hover erXlJb6.png"
+			},
 			"ev",
 			{
 				"VAR?": "DEBUG"
@@ -63,7 +72,7 @@
 							"flg": 20
 						},
 						{
-							"->": "0.11"
+							"->": "0.14"
 						},
 						{
 							"c-0": [
@@ -107,11 +116,19 @@
 				{
 					"b": [
 						"\n",
+						"^todo fix preload",
+						"\n",
+						{
+							"#": "background: ZJZz4dp.jpeg"
+						},
+						{
+							"->": "nav_kitchen"
+						},
 						{
 							"->": "start"
 						},
 						{
-							"->": "0.11"
+							"->": "0.14"
 						},
 						null
 					]
@@ -166,16 +183,13 @@
 			"start": [
 				[
 					{
-						"#": "background: ZJZz4dp.jpeg"
-					},
-					{
 						"#": "show: anya happy left"
 					},
 					{
 						"#": "show: tom default right"
 					},
 					[
-						"^They are keeping me waiting.",
+						"^They are <b>keeping</b> me <u>waiting</u>.",
 						"\n",
 						[
 							"ev",
@@ -14055,6 +14069,42 @@
 						]
 					}
 				],
+				null
+			],
+			"nav_kitchen": [
+				{
+					"#": "show: anya happy left"
+				},
+				{
+					"#": "imagebutton: do_thing houseButton 30 20"
+				},
+				{
+					"#": "imagebutton: do_other houseButton 10 200"
+				},
+				{
+					"#": "imagebutton: do_other \"my text button?\" 10 200"
+				},
+				"done",
+				null
+			],
+			"do_thing": [
+				{
+					"#": "show: anya happy left"
+				},
+				{
+					"#": "show: tom default right"
+				},
+				"^This works then",
+				"\n",
+				"done",
+				null
+			],
+			"do_other": [
+				"^Do another",
+				"\n",
+				{
+					"->": "start"
+				},
 				null
 			],
 			"global decl": [

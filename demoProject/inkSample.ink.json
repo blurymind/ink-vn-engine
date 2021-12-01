@@ -21,6 +21,12 @@
 				"#": "image: tom default AtpoiUa.png"
 			},
 			{
+				"#": "image: houseBg day XmB4XvH.jpg"
+			},
+			{
+				"#": "image: houseBg night UoyUVHn.jpg"
+			},
+			{
 				"#": "preload: 3aaz0G9.png, erXlJb6.png"
 			},
 			{
@@ -72,7 +78,7 @@
 							"flg": 20
 						},
 						{
-							"->": "0.14"
+							"->": "0.16"
 						},
 						{
 							"c-0": [
@@ -116,10 +122,20 @@
 				{
 					"b": [
 						"\n",
+						{
+							"#": "background: ZJZz4dp.jpeg"
+						},
 						"^todo fix preload",
 						"\n",
 						{
-							"#": "background: ZJZz4dp.jpeg"
+							"#": "background: houseBg day"
+						},
+						"^err",
+						"\n",
+						"^do night",
+						"\n",
+						{
+							"#": "background: houseBg night"
 						},
 						{
 							"->": "nav_kitchen"
@@ -128,7 +144,7 @@
 							"->": "start"
 						},
 						{
-							"->": "0.14"
+							"->": "0.16"
 						},
 						null
 					]
@@ -14080,6 +14096,9 @@
 				},
 				{
 					"#": "imagebutton: do_other houseButton 10 200"
+				},
+				{
+					"#": "imagebutton: do_other anya 100 200"
 				},
 				{
 					"#": "imagebutton: do_other \"my text button?\" 10 200"

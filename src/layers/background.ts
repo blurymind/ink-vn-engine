@@ -15,12 +15,17 @@ export class Background extends Layer {
         }
     }
 
-    set BackgroundImage(imageURL : string) {
-        if (imageURL !== this.backgroundImageURL) {
-            this.backgroundImageURL = imageURL;
-            Loader.LoadImage(imageURL).then(image => {
-                this.backgroundImage = image;
-            });
+    set BackgroundImage(imageURL : string | ImageBitmap) {
+        if (typeof imageURL === "string") {
+            if (imageURL !== this.backgroundImageURL) {
+                this.backgroundImageURL = imageURL;
+                Loader.LoadImage(imageURL).then(image => {
+                    this.backgroundImage = image;
+                });
+            }
+
+        } else {
+            this.backgroundImage = imageURL;
         }
     }
 

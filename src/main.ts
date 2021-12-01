@@ -81,7 +81,9 @@ export class VN {
                             break;
                         }
                         case "background": {
-                            this.background.BackgroundImage = value;
+                            const bgParam =  value.split(" ");
+                            const bgImage = bgParam.length > 1 ? this.characters.GetImage(bgParam[0], bgParam[1]) : undefined;
+                            this.background.BackgroundImage = bgImage || value;
                             break;
                         }
                         case "image": {

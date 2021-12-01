@@ -74,6 +74,11 @@ export class VN {
                     // We need to know what tag it is
                     const key : string = match[1];
                     const value : string = getFinalValue(match[2]);
+                    // allow getting variable values inside tags
+                    const params =  value.split(" ").map(v =>  {
+                        const key = v.match(/{(.*?)}/);
+                        return (key && key.length > 1) ? this.Story.variablesState.$(key[1]) : v;
+                    });
                     switch (key) {
                         case "preload": {
                             value.split(",").forEach(_value => Preloader.Preload(
@@ -81,8 +86,7 @@ export class VN {
                             break;
                         }
                         case "background": {
-                            const bgParam =  value.split(" ");
-                            const bgImage = bgParam.length > 1 ? this.characters.GetImage(bgParam[0], bgParam[1]) : undefined;
+                            const bgImage = params.length > 1 ? this.characters.GetImage(params[0],  params[1]) : undefined;
                             this.background.BackgroundImage = bgImage || value;
                             break;
                         }
@@ -95,8 +99,7 @@ export class VN {
                         case "imagebutton": {
                             if (value.length > 0) {
                                 //do_thing yay%s.png 30 20
-                                const buttonParam =  value.split(" ");
-                                this.choiceScreen.AddButton(this.characters, {knot: buttonParam[0], text: buttonParam[1], position: new Point(parseInt(buttonParam[2]), parseInt(buttonParam[3]))});
+                                this.choiceScreen.AddButton(this.characters, {knot: params[0], text: params[1], position: new Point(parseInt(params[2]), parseInt(params[3]))});
                             }
                             break;
                         }

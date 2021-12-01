@@ -128,7 +128,7 @@
 						"^todo fix preload",
 						"\n",
 						{
-							"#": "background: houseBg day"
+							"#": "background: houseBg {dayTime}"
 						},
 						"^err",
 						"\n",
@@ -14135,6 +14135,12 @@
 				0,
 				{
 					"VAR=": "evasive"
+				},
+				"str",
+				"^day",
+				"/str",
+				{
+					"VAR=": "dayTime"
 				},
 				0,
 				{

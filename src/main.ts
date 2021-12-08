@@ -16,6 +16,8 @@ export class VN {
     private characters : Layers.Characters;
     private choiceScreen : Layers.ChoiceLayer;
     private currentScreen : Layers.GameplayLayer;
+    private hudScreen : string;
+    private hudScreens : { [key : string] : Layers.ChoiceLayer };
     private previousTimestamp : number;
     private speakingCharacterName : string = "";
     private speechScreen : Layers.SpeechLayer;
@@ -43,6 +45,7 @@ export class VN {
                 OuterMargin : new Point(50)
             });
             this.choiceScreen = new Layers.ChoiceLayer(this.Canvas.Size);
+            this.hudScreens = {};
             this.Canvas.OnClick.On(this.mouseClick.bind(this));
             this.Canvas.OnMove.On(this.mouseMove.bind(this));
 
@@ -56,7 +59,12 @@ export class VN {
             initStory(JSON.stringify(storyFilenameOrObject));
         }
     }
-
+    private makeHud(hudName: string) : void {
+        if (!(hudName in this.hudScreens)) {
+            this.hudScreens[hudName] = new Layers.ChoiceLayer(this.Canvas.Size);
+            console.log("Created new HUD", this.hudScreens);
+        }
+    }
     private computeTags() : void {
         const getFinalValue = (value : string) => {
             const valueMatch = value.match(/^\{(\w+)\}$/);
@@ -75,10 +83,11 @@ export class VN {
                     const key : string = match[1];
                     const value : string = getFinalValue(match[2]);
                     // allow getting variable values inside tags
-                    const params =  value.split(" ").map(v =>  {
+                    const params =  value.match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g).map(v =>  {
                         const key = v.match(/{(.*?)}/);
                         return (key && key.length > 1) ? this.Story.variablesState.$(key[1]) : v;
                     });
+                    console.log("PARAMS",params)
                     switch (key) {
                         case "preload": {
                             value.split(",").forEach(_value => Preloader.Preload(
@@ -96,10 +105,40 @@ export class VN {
                             }
                             break;
                         }
-                        case "imagebutton": {
+                        case "button": {
                             if (value.length > 0) {
                                 //do_thing yay%s.png 30 20
-                                this.choiceScreen.AddButton(this.characters, {knot: params[0], text: params[1], position: new Point(parseInt(params[2]), parseInt(params[3]))});
+                                if (params.length === 4 ) { // no hud was passed, add to scene
+                                    this.choiceScreen.AddButton(this.characters, {knot: params[0], text: params[1], position: new Point(parseInt(params[2]), parseInt(params[3]))});
+                                } else if (params.length === 5 ) { // hud was passed, add to huds
+                                    //do_thing yay%s.png 30 20 hudName - make a hud if it doesnt exist, add this button to it
+                                    const hudName = params[4];
+                                    this.makeHud(hudName);
+                                    this.hudScreens[hudName].AddButton(this.characters, {knot: params[0], text: params[1], position: new Point(parseInt(params[2]), parseInt(params[3]))});
+                                }
+                            }
+                            break;
+                        }
+                        case "label": {
+                            if (value.length > 0) {
+                                //"my boring label" 30 20
+                                if (params.length === 3 ) { // no hud was passed, add to scene
+                                    this.choiceScreen.AddButton(this.characters, {knot: null, text: params[0], position: new Point(parseInt(params[1]), parseInt(params[2]))});
+                                } else if (params.length === 4 ) { // hud was passed, add to huds
+                                    //"my boring label" 30 20 hudName - make a hud if it doesnt exist, add this button to it
+                                    const hudName = params[3];
+                                    this.makeHud(hudName);
+                                    this.hudScreens[hudName].AddButton(this.characters, {knot: null, text: params[0], position: new Point(parseInt(params[1]), parseInt(params[2]))});
+                                }
+                            }
+                            break;
+                        }
+                        case "hud": {
+                            if (value.length > 0) {
+                                const hudName = params[0];
+                                if (hudName in this.hudScreens) {
+                                    this.hudScreen = hudName;
+                                }
                             }
                             break;
                         }
@@ -190,6 +229,9 @@ export class VN {
         } else {
             this.currentScreen.MouseClick(clickPosition, () => this.continue());
         }
+        if (this.hudScreen in this.hudScreens) {
+            this.hudScreens[this.hudScreen].MouseClick(clickPosition, this.validateChoice.bind(this));
+        }
     }
 
     private mouseMove(sender : Canvas, mousePosition : Point) : void {
@@ -197,6 +239,14 @@ export class VN {
         if (callback != null) {
             callback(sender);
         }
+
+        if (this.hudScreen in this.hudScreens) {
+            const callbackHud = this.hudScreens[this.hudScreen].MouseMove(mousePosition);
+            if (callbackHud != null) {
+                callbackHud(sender);
+            }
+        }
+
     }
 
     private requestStep() : void {
@@ -223,11 +273,15 @@ export class VN {
             this.currentScreen.Draw(this.Canvas);
         }
 
+        if (this.hudScreen && this.hudScreen in this.hudScreens) {
+            this.hudScreens[this.hudScreen].Draw(this.Canvas); //draw one of a number of huds, created when adding buttons
+        }
         this.requestStep();
     }
 
     // when number,its a choiceIndex, when string - its a knot
-    private validateChoice(choice : number | string) : void {
+    private validateChoice(choice : number | string | null) : void {
+        if (!choice) return;
         if (typeof choice === "string") {
             this.Story.ChoosePathString(choice);
         } else {

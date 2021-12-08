@@ -138,7 +138,7 @@
 							"#": "background: houseBg night"
 						},
 						{
-							"->": "nav_kitchen"
+							"->": "draw_hud"
 						},
 						{
 							"->": "start"
@@ -14092,16 +14092,19 @@
 					"#": "show: anya happy left"
 				},
 				{
-					"#": "imagebutton: do_thing houseButton 30 20"
+					"#": "button: do_thing houseButton 30 20"
 				},
 				{
-					"#": "imagebutton: do_other houseButton 10 200"
+					"#": "button: do_other houseButton 10 200"
 				},
 				{
-					"#": "imagebutton: do_other anya 100 200"
+					"#": "button: do_other anya 100 200"
 				},
 				{
-					"#": "imagebutton: do_other \"my text button?\" 10 200"
+					"#": "label: \"boring label\" 20 340"
+				},
+				{
+					"#": "button: do_other \"my text button?\" 300 200"
 				},
 				"done",
 				null
@@ -14115,7 +14118,10 @@
 				},
 				"^This works then",
 				"\n",
-				"done",
+				"ev",
+				"void",
+				"/ev",
+				"->->",
 				null
 			],
 			"do_other": [
@@ -14124,6 +14130,36 @@
 				{
 					"->": "start"
 				},
+				null
+			],
+			"draw_hud": [
+				{
+					"#": "button: hud_thing houseButton 0 0 overview"
+				},
+				{
+					"#": "button: do_thing \"my boring button\" 50 0 overview"
+				},
+				{
+					"#": "label: \"boring hud label\" 500 0 overview"
+				},
+				{
+					"#": "hud: overview"
+				},
+				{
+					"->": "nav_kitchen"
+				},
+				null
+			],
+			"hud_thing": [
+				"^its working",
+				"\n",
+				{
+					"#": "hud: none"
+				},
+				"ev",
+				"void",
+				"/ev",
+				"->->",
 				null
 			],
 			"global decl": [

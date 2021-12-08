@@ -8,7 +8,7 @@ class ChoiceBox {
     private boxBackground : BoxBackground;
     private fontSize : number = 24;
     private hasAlreadyBeenDrawnOnce : boolean = false;
-    private id : number;
+    public id : number;
     private innerMargin : Point = new Point(0, 20);
     private position : Point;
     private size : Point;
@@ -51,7 +51,7 @@ class ChoiceBox {
 
         if (!this.image) {
             this.boxBackground.Draw(canvas);
-            canvas.DrawText(this.text, this.position.Add(this.innerMargin), "white", this.fontSize, this.size.X);
+            canvas.DrawText(this.text, this.position.Add(this.innerMargin), this.isHovered ? "yellow" : "white", this.fontSize, this.size.X);
         } else {
             canvas.DrawImage(this.hoverImage && this.isHovered ? this.hoverImage : this.image, this.position);
         }
@@ -137,7 +137,7 @@ export class ChoiceLayer extends GameplayLayer {
         } else {
             for (const choice of this.choiceBoxes) {
                 choice.isHovered = false;
-                if (mousePosition.IsInRect(choice.BoundingRect)) {
+                if (choice.id && mousePosition.IsInRect(choice.BoundingRect)) {
                     return (canvas : Canvas) => {
                         this.isMouseOnChoice = choice;
                         canvas.SetCursor("pointer");

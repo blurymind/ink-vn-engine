@@ -74,7 +74,7 @@ export class Canvas {
         this.ctx.fillStyle = color;
         this.ctx.font = `${fontSize}px sans-serif`;
         this.ctx.textBaseline = "top";
-        this.ctx.fillText(text, position.X, position.Y, maxWidth);
+        this.ctx.fillText(text.replace(/^"(.*)"$/, "$1"), position.X, position.Y, maxWidth);
     }
 
     DrawText0(text : string, color : string, fontSize : number, maxWidth? : number) : void {

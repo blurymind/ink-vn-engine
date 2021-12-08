@@ -8,7 +8,8 @@ class ChoiceBox {
     private boxBackground : BoxBackground;
     private fontSize : number = 24;
     private hasAlreadyBeenDrawnOnce : boolean = false;
-    public id : number;
+    // when number = choice index(0, 1, 2...), string = knot name, null = nada
+    public id : number | string | null;
     private innerMargin : Point = new Point(0, 20);
     private position : Point;
     private size : Point;
@@ -17,7 +18,7 @@ class ChoiceBox {
     private hoverImage? : ImageBitmap;
     public isHovered: boolean;
 
-    constructor(id : number, text : string, width : number, position : Point, image? : ImageBitmap, hoverImage? : ImageBitmap) {
+    constructor(id : number | string | null, text : string, width : number, position : Point, image? : ImageBitmap, hoverImage? : ImageBitmap) {
         this.id = id;
         this.text = text;
 
@@ -33,7 +34,7 @@ class ChoiceBox {
         this.boxBackground = BoxBackgroundFactory.Create(BoxBackgroundTypes.COLOR, "rgba(0, 0, 0, .7)", this.size, this.position);
     }
 
-    get Id() : number {
+    get Id() : number | string | null {
         return this.id;
     }
 
@@ -137,7 +138,7 @@ export class ChoiceLayer extends GameplayLayer {
         } else {
             for (const choice of this.choiceBoxes) {
                 choice.isHovered = false;
-                if (choice.id && mousePosition.IsInRect(choice.BoundingRect)) {
+                if (choice.id !== null && mousePosition.IsInRect(choice.BoundingRect)) {
                     return (canvas : Canvas) => {
                         this.isMouseOnChoice = choice;
                         canvas.SetCursor("pointer");

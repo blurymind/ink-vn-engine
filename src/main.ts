@@ -267,21 +267,20 @@ export class VN {
 
         this.background.Draw(this.Canvas);
         this.characters.Draw(this.Canvas);
+        if (this.hudScreen && this.hudScreen in this.hudScreens) {
+            this.hudScreens[this.hudScreen].Draw(this.Canvas); //draw one of a number of huds, created when adding buttons
+        }
         if (this.transition != null) {
             this.transition.Draw(this.Canvas);
         } else {
             this.currentScreen.Draw(this.Canvas);
-        }
-
-        if (this.hudScreen && this.hudScreen in this.hudScreens) {
-            this.hudScreens[this.hudScreen].Draw(this.Canvas); //draw one of a number of huds, created when adding buttons
         }
         this.requestStep();
     }
 
     // when number,its a choiceIndex, when string - its a knot
     private validateChoice(choice : number | string | null) : void {
-        if (!choice) return;
+        if (choice === null) return;
         if (typeof choice === "string") {
             this.Story.ChoosePathString(choice);
         } else {

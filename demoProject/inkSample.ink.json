@@ -14088,6 +14088,8 @@
 				null
 			],
 			"nav_kitchen": [
+				"^show stuff",
+				"\n",
 				{
 					"#": "show: anya happy left"
 				},
@@ -14137,10 +14139,10 @@
 					"#": "button: hud_thing houseButton 0 0 overview"
 				},
 				{
-					"#": "button: do_thing \"my boring button\" 50 0 overview"
+					"#": "button: do_thing \"hud button\" 50 200 overview"
 				},
 				{
-					"#": "label: \"boring hud label\" 500 0 overview"
+					"#": "label: \"hud label\" 500 0 overview"
 				},
 				{
 					"#": "hud: overview"

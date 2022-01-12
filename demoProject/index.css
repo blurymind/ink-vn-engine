@@ -40,6 +40,11 @@ body {
     font-family: Arial, sans-serif;
 }
 
+.dialog-area:hover{
+    background-color: rgba(129, 129, 129, 0.57);
+    border: 0.4rem solid rgba(255, 189, 59, 0.66);
+}
+
 .dialog-area-tag {
     position: absolute;
     top: 5%;
@@ -121,4 +126,45 @@ body {
 }
 .items-screen {
     /*margin: 5rem;*/
+}
+
+.header-buttons-right {
+    right: 0;
+    justify-content: right;
+}
+.header-buttons-right,
+.header-buttons-left {
+    position: absolute;
+    display: flex;
+    padding: 4px;
+    gap: 5px;
+}
+
+.header-buttons-right> div,
+.header-buttons-left> div{
+    display: flex;
+    height: 55px;
+    background-color: rgba(187, 187, 187, 0.61);
+    border-radius: 50%;
+    aspect-ratio: 1/1;
+    padding: 9px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-shadow: rgba(0, 0, 0, 0.65) 1px 1px 1px;
+    overflow: hidden;
+}
+.header-buttons-right> div:hover,
+.header-buttons-left> div:hover{
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9);
+    text-shadow: #000000 1px 1px 1px;
+    font-size: 1.12rem;
+}
+.header-buttons-right> div> p,
+.header-buttons-left> div> p{
+    position: absolute;
+}
+.header-buttons-right> div> img,
+.header-buttons-left> div> img{
+    flex: 1;
 }

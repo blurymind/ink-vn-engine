@@ -144,7 +144,8 @@ body {
 .header-buttons-left> div{
     display: flex;
     height: 55px;
-    background-color: rgba(187, 187, 187, 0.61);
+    background-color: rgba(187, 187, 187, 0.44);
+    opacity: 0.8;
     border-radius: 50%;
     aspect-ratio: 1/1;
     padding: 9px;
@@ -156,6 +157,8 @@ body {
 }
 .header-buttons-right> div:hover,
 .header-buttons-left> div:hover{
+    background-color: rgba(187, 187, 187, 0.95);
+    opacity: 1;
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9);
     text-shadow: #000000 1px 1px 1px;
     font-size: 1.12rem;

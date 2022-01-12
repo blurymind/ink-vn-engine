@@ -15,7 +15,7 @@ export class VN {
     private background : Layers.Background;
     private characters : Layers.Characters;
     private choiceScreen : Layers.ChoiceLayer;
-    private currentScreen : Layers.GameplayLayer;
+    private currentScreen : Layers.GameplayLayer | null;
     private hudScreen : string;
     private hudScreens : { [key : string] : Layers.ChoiceLayer };
     private previousTimestamp : number;
@@ -87,7 +87,7 @@ export class VN {
                         const key = v.match(/{(.*?)}/);
                         return (key && key.length > 1) ? this.Story.variablesState.$(key[1]) : v;
                     });
-                    console.log("PARAMS",params)
+                    console.log(key, "PARAMS",params)
                     switch (key) {
                         case "preload": {
                             value.split(",").forEach(_value => Preloader.Preload(
@@ -199,13 +199,17 @@ export class VN {
                 this.continue();
                 this.computeTags();
                 if (this.choiceScreen.choices.length > 0) {
+                    console.log("SHOW CHOICE", this.Story.currentText)
                     this.currentScreen = this.choiceScreen ;
                 } else {
                     // still required for initiation when there is no text
-                    this.speechScreen.Say(this.Story.currentText, this.speakingCharacterName);
-                    this.currentScreen = this.speechScreen;
+                    console.log("SHOW EMPTY TEXT", this.Story.currentText)
+                    // this.speechScreen.Say(this.Story.currentText, this.speakingCharacterName);
+                    this.currentScreen = null;
+                    // this.continue();
                 }
             } else {
+                console.log("SHOW TEXT", this.Story.currentText)
                 this.computeTags();
                 this.speechScreen.Say(this.Story.currentText, this.speakingCharacterName);
                 this.currentScreen = this.speechScreen;
@@ -217,6 +221,14 @@ export class VN {
         } else {
             // TODO It's the end
         }
+        console.log("CURRENT SCREEN", this.currentScreen, this.Story.currentText)
+
+        // Hide or lock hud
+        if (this.hudScreen === "overview"  && "overview" in this.hudScreens) {
+            this.hudScreens["overview"].visible = !(this.currentScreen instanceof Layers.SpeechLayer || this.currentScreen instanceof Layers.ChoiceLayer);
+        }
+
+
     }
 
     private mouseClick(sender : Canvas, clickPosition : Point) : void {
@@ -227,7 +239,7 @@ export class VN {
         if (this.currentScreen instanceof Layers.ChoiceLayer) {
             this.currentScreen.MouseClick(clickPosition, this.validateChoice.bind(this));
         } else {
-            this.currentScreen.MouseClick(clickPosition, () => this.continue());
+            this.currentScreen?.MouseClick(clickPosition, () => this.continue());
         }
         if (this.hudScreen in this.hudScreens) {
             this.hudScreens[this.hudScreen].MouseClick(clickPosition, this.validateChoice.bind(this));
@@ -235,7 +247,7 @@ export class VN {
     }
 
     private mouseMove(sender : Canvas, mousePosition : Point) : void {
-        const callback = this.currentScreen.MouseMove(mousePosition);
+        const callback = this.currentScreen?.MouseMove(mousePosition);
         if (callback != null) {
             callback(sender);
         }
@@ -262,7 +274,7 @@ export class VN {
         if (this.transition != null) {
             this.transition.Step(delta);
         } else {
-            this.currentScreen.Step(delta);
+            this.currentScreen?.Step(delta);
         }
 
         this.background.Draw(this.Canvas);
@@ -273,7 +285,7 @@ export class VN {
         if (this.transition != null) {
             this.transition.Draw(this.Canvas);
         } else {
-            this.currentScreen.Draw(this.Canvas);
+            this.currentScreen?.Draw(this.Canvas);
         }
         this.requestStep();
     }

@@ -132,11 +132,6 @@
 						},
 						"^err",
 						"\n",
-						"^do night",
-						"\n",
-						{
-							"#": "background: houseBg night"
-						},
 						{
 							"->": "draw_hud"
 						},
@@ -14088,28 +14083,113 @@
 				null
 			],
 			"nav_kitchen": [
-				"^show stuff",
-				"\n",
+				[
+					"^show stuff",
+					"\n",
+					{
+						"#": "show: anya happy left"
+					},
+					{
+						"#": "button: do_thing houseButton 30 20"
+					},
+					{
+						"#": "button: do_other houseButton 10 200"
+					},
+					{
+						"#": "button: do_other anya 100 200"
+					},
+					{
+						"#": "label: \"boring label\" 20 340"
+					},
+					{
+						"#": "button: do_other \"my text button?\" 300 200"
+					},
+					"^hide stuff while talk?",
+					"\n",
+					[
+						"^You're in the bedroom.",
+						"\n",
+						"ev",
+						"str",
+						"^Look around",
+						"/str",
+						"/ev",
+						{
+							"*": ".^.c-0",
+							"flg": 4
+						},
+						"ev",
+						"str",
+						"^Look at window",
+						"/str",
+						"/ev",
+						{
+							"*": ".^.c-1",
+							"flg": 4
+						},
+						"ev",
+						"str",
+						"^Leave",
+						"/str",
+						"/ev",
+						{
+							"*": ".^.c-2",
+							"flg": 4
+						},
+						{
+							"c-0": [
+								"\n",
+								{
+									"->t->": ".^.^.^.^.look_around"
+								},
+								{
+									"->": ".^.^"
+								},
+								null
+							],
+							"c-1": [
+								"\n",
+								{
+									"->t->": ".^.^.^.^.look_window"
+								},
+								{
+									"->": ".^.^"
+								},
+								null
+							],
+							"c-2": [
+								"^ You walk out ",
+								{
+									"->": "map_kitchen"
+								},
+								"\n",
+								null
+							],
+							"#n": "top"
+						}
+					],
+					null
+				],
 				{
-					"#": "show: anya happy left"
-				},
-				{
-					"#": "button: do_thing houseButton 30 20"
-				},
-				{
-					"#": "button: do_other houseButton 10 200"
-				},
-				{
-					"#": "button: do_other anya 100 200"
-				},
-				{
-					"#": "label: \"boring label\" 20 340"
-				},
-				{
-					"#": "button: do_other \"my text button?\" 300 200"
-				},
-				"done",
-				null
+					"look_window": [
+						"^There's no people outside. It's dark.",
+						"\n",
+						"ev",
+						"void",
+						"/ev",
+						"->->",
+						null
+					],
+					"look_around": [
+						"^There's a bed in the corner.",
+						"\n",
+						"ev",
+						"void",
+						"/ev",
+						"->->",
+						null
+					]
+				}
 			],
 			"do_thing": [
 				{
@@ -14136,20 +14216,15 @@
 			],
 			"draw_hud": [
 				{
-					"#": "button: hud_thing houseButton 0 0 overview"
+					"#": "button: map_kitchen houseButton 0 0 overview"
 				},
 				{
-					"#": "button: do_thing \"hud button\" 50 200 overview"
-				},
-				{
-					"#": "label: \"hud label\" 500 0 overview"
+					"#": "button: do_thing \"hud button top\" 50 200 overview"
 				},
 				{
 					"#": "hud: overview"
 				},
-				{
-					"->": "nav_kitchen"
-				},
+				"end",
 				null
 			],
 			"hud_thing": [
@@ -14158,10 +14233,26 @@
 				{
 					"#": "hud: none"
 				},
-				"ev",
-				"void",
-				"/ev",
-				"->->",
+				"done",
+				null
+			],
+			"map_kitchen": [
+				{
+					"#": "button: do_thing \"hud button top\" 120 200 kitchen"
+				},
+				{
+					"#": "button: nav_kitchen houseButton 30 20 kitchen"
+				},
+				{
+					"#": "background: houseBg night"
+				},
+				{
+					"#": "label: \"kitchen\" 500 0 kitchen"
+				},
+				{
+					"#": "hud: kitchen"
+				},
+				"done",
 				null
 			],
 			"global decl": [

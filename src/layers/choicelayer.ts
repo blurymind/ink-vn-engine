@@ -66,17 +66,20 @@ class ChoiceBox {
 
 export class ChoiceLayer extends GameplayLayer {
     choices : Choice[] = [];
+    visible : boolean;
     private boundingRect : Point;
     private choiceBoxes : ChoiceBox[] = [];
     private isMouseOnChoice : ChoiceBox = null;
     private screenSize : Point;
     private translation : Point;
 
+    // if name is overview, hide during choices or dialogue with characters
     constructor(screenSize : Point) {
         super();
         this.choiceBoxes = [];
         this.translation = new Point(0, 0 );
         this.screenSize = screenSize;
+        this.visible = true;
     }
 
     set Choices(choices : Choice[]) {
@@ -110,6 +113,7 @@ export class ChoiceLayer extends GameplayLayer {
     }
 
     Draw(canvas : Canvas) : void {
+        if (!this.visible) return;
         canvas.Translate(this.translation);
         for (const choiceBox of this.choiceBoxes) {
             choiceBox.Draw(canvas);
@@ -118,6 +122,7 @@ export class ChoiceLayer extends GameplayLayer {
     }
 
     MouseClick(clickPosition : Point, action : Function) : void {
+        if (!this.visible) return;
         for (const choiceBox of this.choiceBoxes) {
             const boundingRect = choiceBox.BoundingRect;
             boundingRect.Position = boundingRect.Position.Add(this.translation);
@@ -129,6 +134,8 @@ export class ChoiceLayer extends GameplayLayer {
     }
 
     MouseMove(mousePosition : Point) : (_ : Canvas) => void {
+        if (!this.visible) return;
+
         mousePosition = mousePosition.Sub(this.translation);
         if (this.isMouseOnChoice != null) {
             return mousePosition.IsInRect(this.isMouseOnChoice.BoundingRect) ? null : (canvas : Canvas) => {

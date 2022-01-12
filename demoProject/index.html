@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <link rel="stylesheet" href="index.css">
+</head>
 <body>
 <div id="vn"></div>
 
@@ -11,17 +14,55 @@
 <script src="ink-vn-engine.js"></script>
 <script type="text/javascript">
     window.onload = function() {
-        fetch("inkSample.ink.json")
-            .then(response => response.json())
-            .then(json => {
-                console.log(json, InkVN)
-                const vn = new InkVN.VN(json, "vn");
-                console.log(vn)
-            });
+        // fetch("inkSample.ink.json")
+        //     .then(response => response.json())
+        //     .then(json => {
+        //         console.log(json, InkVN)
+        //         const vn = new InkVN.VN(json, "vn");
+        //         console.log(vn)
+        //     });
 
         // const vn = new InkVN.VN("inkSample.ink.json", "vn");
         // console.log(vn)
     };
 </script>
+<div class="root">
+
+    <div class="background">
+        <img src="bg/kitchen.jpg">
+    </div>
+    <div class="avatars">
+        <div class="avatars-left"><img src="av/cat.webp"></div>
+        <div class="avatars-middle"><img src="av/cat.webp"></div>
+        <div class="avatars-right"><img src="av/cat.webp"></div>
+    </div>
+
+
+    <div class="options">
+        <div>Option 1</div>
+        <div>Option 2</div>
+        <div>Option 3</div>
+        <div>Option 4</div>
+        <div>Option 5</div>
+        <div>Option 6</div>
+        <div>Option 7</div>
+    </div>
+    <div class="dialog-area">
+        <div class="dialog-area-tag">Johhny</div>
+        <div class="dialog-area-bg"></div>
+        <div class="dialog-area-text">
+            "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
+        </div>
+    </div>
+
+    <div class="items-screen" style="visibility: hidden">
+        Items screen
+    </div>
+
+    <div class="title-screen" style="visibility: hidden">
+        Title screen with save/load/etc TODO (covers everything)
+    </div>
+</div>
+</div>
 </body>
 </html>

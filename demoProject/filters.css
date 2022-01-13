@@ -1,0 +1,37 @@
+[data-filter=image-blur] img {
+    filter: blur(2px);
+}
+[data-filter=image-opacity] img {
+    filter: opacity(50%);
+}
+[data-filter=image-grayscale] img {
+    filter: grayscale(70%);
+}
+[data-filter=image-saturate] img {
+    filter: saturate(360%);
+}
+[data-filter=image-sepia] img {
+    filter: sepia(100%);
+}
+[data-filter=image-invert] img {
+    filter: invert(100%);
+}
+[data-filter=image-brightness] img {
+    filter: brightness(120%);
+}
+[data-filter=image-contrast] img {
+    filter: contrast(160%);
+}
+[data-filter=image-hue-rotate] img {
+    filter: hue-rotate(160deg);
+}
+/* https://codepen.io/stacy/pen/VmpYRr */
+
+.vignette {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 0 200px rgba(0,0,0,0.9) inset;
+}

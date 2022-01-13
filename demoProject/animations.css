@@ -1,0 +1,50 @@
+/*overlay*/
+.fade-to-dark {
+
+}
+
+.slow-flash {
+
+}
+
+.quick-flash {
+
+}
+
+/*avatars*/
+.attack-player {
+
+}
+.move-down{
+
+}
+.move-up {
+
+}
+.avatar-active {
+
+}
+.move-left{
+
+}
+.move-right {
+
+}
+.shaking{
+
+}
+/*https://codepen.io/beauhaus/pen/bpzWEb*/
+@keyframes filter{
+    0% {
+        opacity:1;
+    }
+    50% {
+        opacity:0;
+    }
+    100% {
+        opacity:0.990099773451273;
+    }
+    101% {
+        opacity:0.99;
+    }
+}
